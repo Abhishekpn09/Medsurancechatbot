@@ -1,0 +1,86 @@
+You’ve built a FastAPI application that acts as a backend chatbot handler.
+Here’s the flow, step by step:
+
+1. Default Welcome Intent
+🗣️ Training Phrase:
+•	(Triggered automatically when the user opens the chatbot)
+💬 Bot Response:
+👋 Welcome to Medsurance!
+You can say things like:
+•	“Search HMO plans in California”
+•	“Add plan 1056 to my list”
+•	“Track my application”
+________________________________________
+🛑 2. Default Fallback Intent
+🗣️ Triggered when intent is not understood
+💬 Bot Response:
+Sorry, I didn’t catch that. You can say:
+•	“Search plans”
+•	“Get premium info”
+•	“Track application”
+________________________________________
+🔍 3. plan.search
+🗣️ Training Phrases:
+•	Show me HMO plans in California
+•	List PPO plans in Texas
+•	Find EPO plans available in Florida
+💬 Bot Response:
+Here are some HMO plans in California:
+1.	Plan 1056 – SilverCare PPO
+2.	Plan 1024 – Basic HMO Advantage
+You can add one by saying, “Add plan 1056”
+________________________________________
+📄 4. plan.details
+🗣️ Training Phrases:
+•	Tell me about plan 1056
+•	What does plan 1024 offer?
+•	Give me details on plan 1125
+💬 Bot Response:
+Plan 1056 – SilverCare PPO
+Type: HMO
+Issuer: MedCare
+Adult Dental: Yes
+Child Dental: No
+________________________________________
+•	What’s the premium for plan 1056 for a couple aged 30–39?:
+The monthly premium for a couple aged 30–39 is $420 with an EHB percent of 87%.
+________________________________________
+•	Show me CSR variant 01 for plan 1056
+CSR Variant: 01
+Service Type: Primary Care
+Cost Type: Copayment
+Value: $25
+________________________________________
+•	I want to add plan 1056
+•	Include SilverCare PPO
+•	Yes, add this one
+•	Add Basic HMO Advantage to my list
+💬 Bot Response:
+✅ Plan 1056 – SilverCare PPO has been added to your selection.
+Would you like to add another or view your selected plans?
+________________________________________
+🗑️ 8. RemovePlanFromOrder
+🗣️ Training Phrases:
+•	Remove plan 1056
+•	Delete SilverCare from my list
+•	Take out the HMO plan
+•	I don’t want that plan anymore
+💬 Bot Response:
+🗑️ Plan 1056 has been removed from your list.
+Would you like to add another plan or view what's left?
+________________________________________
+📋 9. View-SelectedPlans
+•	What plans have I added?:
+📝 You’ve selected:
+•	Plan 1056 – SilverCare PPO
+•	Plan 1024 – Basic HMO Advantage
+You can say “Remove a plan” or “Finalize my selection.”
+________________________________________
+✅ 10. ConfirmPlanSelection
+•	Finalize my plans
+✅ Your plans have been submitted for review.
+You’ll receive a confirmation once the application is processed.
+________________________________________
+Track my application
+Your application for Plan 1056 is currently under review.
+We’ll notify you once a decision is made.
