@@ -1,51 +1,67 @@
+Project Overview: Medsurance Chatbot
+Medsurance is an AI-powered conversational assistant designed to simplify the often overwhelming process of exploring health insurance plans in the U.S. Through natural language interaction, users can search for plans, get premium estimates, view plan details, and track their application — all using a friendly chatbot interface.
 
-The Medsurance Chatbot is organized into modular components that handle data preprocessing, backend logic, Dialogflow integration, and optional frontend capabilities.
+🗂️ Project Structure (Explained)
+The project is modular and organized into folders, each with a clear purpose:
 
-pgsql
-Copy
-Edit
-Medsurancechatbot/
-│
-├── backend/                → FastAPI server handling all Dialogflow webhook requests
-├── db/                     → SQL Server database schema and dump
-├── frontend/               → (Optional) Static site or client UI
-├── dialogflow_assets/      → Intents, entities, training phrases
-├── notebooks/              → Jupyter notebooks for data cleaning & ETL
+backend/ – This is the heart of your chatbot logic. It contains a FastAPI server that acts as the webhook for Dialogflow. It processes user queries, interacts with the database, and formats responses.
 
-⚙️ Installation & Setup
-1️ Python & Dependencies
-Install required packages via pip:
+db/ – Contains a SQL file (DE.sql) that defines your database schema and includes sample data. This needs to be imported into SQL Server to support chatbot queries.
+
+dialogflow_assets/ – This folder includes training data (intents, phrases, entities) that can be imported directly into Dialogflow, enabling the chatbot to understand user inputs.
+
+frontend/ (optional) – Can be used to develop a visual web interface, though the chatbot functions independently of it.
+
+notebooks/ – Jupyter notebooks used at the beginning of the project for data cleaning and transforming datasets downloaded from healthcare.gov.
+
+⚙️ Setting Up the Environment
+🔹 Install Required Packages
+To ensure all Python dependencies are available:
 
 bash
 Copy
 Edit
 pip install -r backend/requirements.txt
-Or individually:
+Or install them manually:
 
-bash
-Copy
-Edit
-pip install mysql-connector
-pip install "fastapi[all]"
+fastapi – for building APIs
 
-2️ Running the Backend Server
-To start the FastAPI server:
+uvicorn – for running the FastAPI app
+
+mysql-connector – to connect Python to SQL Server (or MySQL)
+
+🚀 Running the Backend (FastAPI)
+This is how your chatbot backend gets started:
+
+Open your terminal or command prompt
+
+Navigate to the backend directory:
 
 bash
 Copy
 Edit
 cd backend
+Run the API server using:
+
+bash
+Copy
+Edit
 uvicorn main:app --reload
-This will start the server at http://127.0.0.1:8000/
+Once started, it will be available at:
+📍 http://127.0.0.1:8000/
 
-3️ Setting Up the Database
-Import the SQL schema:
+🗃️ Setting Up the Database
+To store and retrieve plan data, your chatbot relies on SQL Server. Here's how to set it up:
 
-Open MySQL Workbench
+Open MySQL Workbench or SQL Server Management Studio
 
-Use db/DE.sql to create tables and populate sample data
+Load the SQL dump file located at:
 
-Tables include:
+pgsql
+Copy
+Edit
+db/DE.sql
+This will create the necessary tables:
 
 Plans
 
@@ -57,73 +73,67 @@ PlanLocations
 
 Locations
 
-Update database connection info in db_helper.py if needed.
+Make sure the database connection settings in db_helper.py match your local SQL setup.
 
-4️ Exposing Webhook with ngrok
-If using Dialogflow, you'll need to expose your local backend:
+🌍 Connecting to Dialogflow
+Dialogflow (ES or CX) is used to define how your bot understands user input.
 
-Download ngrok
+Since Dialogflow requires a public URL, you’ll need to expose your FastAPI server using ngrok.
 
-Unzip and open a terminal in its directory
+🔹 Steps to Run ngrok
+Download from https://ngrok.com/download
 
-Run:
+Extract and place ngrok.exe somewhere accessible
+
+Run this command in terminal:
 
 bash
 Copy
 Edit
 ngrok http 8000
-Copy the https:// URL and paste it into your Dialogflow webhook URL.
+You’ll get a temporary https:// URL. Use this as the webhook URL in Dialogflow.
 
-Note: ngrok sessions expire. Restart it as needed and update your webhook URL.
+📝 Note: ngrok sessions expire — when they do, re-run the command and update the webhook URL in Dialogflow.
 
- Components Overview
-main.py – Webhook logic for handling Dialogflow intents
+🧠 Dialogflow AI Setup
+Dialogflow handles user inputs via:
 
-db_helper.py – Centralized SQL query logic for plans, CSR, premium, etc.
+Intents
+Intent Name	What It Does
+plan.search	Search plans by type and county
+provide.agegroup	User specifies age group
+provide.familytype	User specifies family situation (e.g., individual + kids)
+plan.details	Gets metadata for a plan ID
+plan.premium	Returns premium and EHB %
+plan.csr	Displays CSR (cost-sharing reduction) details
+AddPlanToOrder	Adds a plan to the user’s "cart"
+RemovePlanFromOrder	Removes a plan from the cart
+View-SelectedPlans	Lists all selected plans
+ConfirmPlanSelection	Confirms final submission of plans
+TrackPlanApplication	Tracks plan using application ID
 
-county_lookup.py – Maps user-friendly county names to internal codes
+Entities
+These help Dialogflow match user phrases:
 
-generic_helper.py – Formats responses like currency and lists
+plan-type: PPO, HMO, etc.
 
-Medsurance (1).ipynb & (2).ipynb – Clean and transform raw data from healthcare.gov
+location: U.S. counties (e.g., Autauga, Baldwin)
 
-DE.sql – SQL dump to set up tables, relationships, and test records
+age_group: e.g., "30-34"
 
-Checklist Before Deployment
- FastAPI server running
+family_type: e.g., "Individual+2 children"
 
- SQL Server database populated
+plan-id: 14-character alphanumeric string
 
- Dialogflow intents match backend logic
+application_id: Tracking number for application
 
- ngrok running (for public webhook access)
+✅ Final Checklist
+Before testing the full experience:
 
- county codes synced via county_lookup.py
+✅ FastAPI server is running
 
-Directory structure
-===================
-backend: Contains Python FastAPI backend code
-db: contains the dump of the database. you need to import this into your MySQL db by using MySQL workbench tool
-dialogflow_assets: this has training phrases etc. for our intents
-frontend: website code
+✅ SQL database is correctly loaded
 
-Install these modules
-======================
+✅ Webhook is connected to Dialogflow via ngrok
 
-pip install mysql-connector
-pip install "fastapi[all]"
-
-OR just run pip install -r backend/requirements.txt to install both in one shot
-
-To start fastapi backend server
-================================
-1. Go to backend directory in your command prompt
-2. Run this command: uvicorn main:app --reload
-
-ngrok for https tunneling
-================================
-1. To install ngrok, go to https://ngrok.com/download and install ngrok version that is suitable for your OS
-2. Extract the zip file and place ngrok.exe in a folder.
-3. Open windows command prompt, go to that folder and run this command: ngrok http 80000
-
-NOTE: ngrok can timeout. you need to restart the session if you see session expired message.
+✅ Entities and intents are imported into Dialogflow
