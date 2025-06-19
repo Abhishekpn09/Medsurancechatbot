@@ -9,7 +9,7 @@ dialogflow_assets/ – This folder includes training data (intents, phrases, ent
 frontend/ (optional) – Can be used to develop a visual web interface, though the chatbot functions independently of it.
 notebooks/ – Jupyter notebooks used at the beginning of the project for data cleaning and transforming datasets downloaded from healthcare.gov.
 
-⚙️ Setting Up the Environment
+⚙ Setting Up the Environment
 🔹 Install Required Packages
 To ensure all Python dependencies are available:
 
