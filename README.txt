@@ -1,3 +1,105 @@
+
+The Medsurance Chatbot is organized into modular components that handle data preprocessing, backend logic, Dialogflow integration, and optional frontend capabilities.
+
+pgsql
+Copy
+Edit
+Medsurancechatbot/
+│
+├── backend/                → FastAPI server handling all Dialogflow webhook requests
+├── db/                     → SQL Server database schema and dump
+├── frontend/               → (Optional) Static site or client UI
+├── dialogflow_assets/      → Intents, entities, training phrases
+├── notebooks/              → Jupyter notebooks for data cleaning & ETL
+
+⚙️ Installation & Setup
+1️ Python & Dependencies
+Install required packages via pip:
+
+bash
+Copy
+Edit
+pip install -r backend/requirements.txt
+Or individually:
+
+bash
+Copy
+Edit
+pip install mysql-connector
+pip install "fastapi[all]"
+
+2️ Running the Backend Server
+To start the FastAPI server:
+
+bash
+Copy
+Edit
+cd backend
+uvicorn main:app --reload
+This will start the server at http://127.0.0.1:8000/
+
+3️ Setting Up the Database
+Import the SQL schema:
+
+Open MySQL Workbench
+
+Use db/DE.sql to create tables and populate sample data
+
+Tables include:
+
+Plans
+
+PlanPremiums
+
+PlanCSR
+
+PlanLocations
+
+Locations
+
+Update database connection info in db_helper.py if needed.
+
+4️ Exposing Webhook with ngrok
+If using Dialogflow, you'll need to expose your local backend:
+
+Download ngrok
+
+Unzip and open a terminal in its directory
+
+Run:
+
+bash
+Copy
+Edit
+ngrok http 8000
+Copy the https:// URL and paste it into your Dialogflow webhook URL.
+
+Note: ngrok sessions expire. Restart it as needed and update your webhook URL.
+
+ Components Overview
+main.py – Webhook logic for handling Dialogflow intents
+
+db_helper.py – Centralized SQL query logic for plans, CSR, premium, etc.
+
+county_lookup.py – Maps user-friendly county names to internal codes
+
+generic_helper.py – Formats responses like currency and lists
+
+Medsurance (1).ipynb & (2).ipynb – Clean and transform raw data from healthcare.gov
+
+DE.sql – SQL dump to set up tables, relationships, and test records
+
+Checklist Before Deployment
+ FastAPI server running
+
+ SQL Server database populated
+
+ Dialogflow intents match backend logic
+
+ ngrok running (for public webhook access)
+
+ county codes synced via county_lookup.py
+
 Directory structure
 ===================
 backend: Contains Python FastAPI backend code
